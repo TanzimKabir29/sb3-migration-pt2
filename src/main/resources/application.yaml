@@ -1,0 +1,22 @@
+spring:
+  application.name: sbmigration
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB_NAME:sb3migration}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASS:root}
+  jpa:
+    hibernate.ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    generate-ddl: true
+    show-sql: false
+
+custom-property:
+  name: CustomNameFromProperties
+  type: SampleType
+
+management.tracing:
+  enabled: true
+  sampling.probability: 1.0
+  propagation.type: w3c

@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:5.7.36
+    platform: linux/x86_64
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: sb3migration
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    restart: always
+    ports:
+      - 9411:9411
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    restart: always
+    command:
+      - --enable-feature=exemplar-storage
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - 9090:9090
